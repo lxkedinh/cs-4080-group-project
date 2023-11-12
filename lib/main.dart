@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'custom_search_delegate.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:group_project/weather.dart';
 
-void main() {
+void main() async {
+  await dotenv.load();
   runApp(const MyApp());
 }
 
@@ -41,10 +44,7 @@ class _MyHomePageState extends State<MyHomePage> {
         actions: [
           IconButton(
             onPressed: () {
-              showSearch(
-                  context: context,
-                  delegate: CustomSearchDelegate()
-              );
+              showSearch(context: context, delegate: CustomSearchDelegate());
             },
             icon: const Icon(Icons.search),
           )
@@ -57,40 +57,32 @@ class _MyHomePageState extends State<MyHomePage> {
           children: <Widget>[
             // Container for current weather
             Container(
-              padding: const EdgeInsets.all(8),
-              height: 150,
-              color: Colors.white70,
-              child: const Row (
-                children: <Widget>[
-                  Icon(
-                    Icons.sunny
-                  ),
-                  Text('Current Weather')
-                ],
-              )
-            ),
+                padding: const EdgeInsets.all(8),
+                height: 150,
+                color: Colors.white70,
+                child: const Row(
+                  children: <Widget>[
+                    Icon(Icons.sunny),
+                    Text('Current Weather')
+                  ],
+                )),
 
             // List of the weather report for the next week
-            Expanded(child: ListView.separated(
+            Expanded(
+                child: ListView.separated(
               padding: const EdgeInsets.all(8),
               itemCount: 7,
-              separatorBuilder: (BuildContext context, int index) => const Divider(),
+              separatorBuilder: (BuildContext context, int index) =>
+                  const Divider(),
               itemBuilder: (BuildContext context, int index) {
                 return Container(
-                  height: 50,
-                  color: Colors.white12,
-                  child: const Row (
-                    children: <Widget>[
-                      Icon(
-                          Icons.sunny
-                      ),
-                      Text('Day')
-                    ],
-                  )
-                );
-              },)
-            )
-
+                    height: 50,
+                    color: Colors.white12,
+                    child: const Row(
+                      children: <Widget>[Icon(Icons.sunny), Text('Day')],
+                    ));
+              },
+            ))
           ],
         ),
       ),
