@@ -34,6 +34,14 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  late Future<List<Weather>> futureWeather;
+
+  @override
+  void initState() {
+    super.initState();
+    futureWeather = Weather.fetchWeather("Pomona");
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -44,6 +52,7 @@ class _MyHomePageState extends State<MyHomePage> {
         actions: [
           IconButton(
             onPressed: () {
+              // TODO add search functionality, currently defaults to Pomona
               showSearch(context: context, delegate: CustomSearchDelegate());
             },
             icon: const Icon(Icons.search),
@@ -51,39 +60,48 @@ class _MyHomePageState extends State<MyHomePage> {
         ],
       ),
 
-      // TODO remove placeholder text/icon, update from API
       body: Center(
-        child: Column(
-          children: <Widget>[
-            // Container for current weather
-            Container(
-                padding: const EdgeInsets.all(8),
-                height: 150,
-                color: Colors.white70,
-                child: const Row(
-                  children: <Widget>[
-                    Icon(Icons.sunny),
-                    Text('Current Weather')
-                  ],
-                )),
+        child: Container(
+            padding: const EdgeInsets.all(8),
+            color: Colors.white70,
+            child: FutureBuilder<List<Weather>> (
+              future: futureWeather,
+              builder: (context, snapshot) {
+                if (snapshot.hasData) {
+                  return Column(
+                    children: [
+                    Text(snapshot.data![0].city),
+                    ListView.separated(
+                    itemCount: snapshot.data!.length,
+                    padding: const EdgeInsets.all(8),
+                    scrollDirection: Axis.vertical,
+                    shrinkWrap: true,
+                    separatorBuilder: (BuildContext context, int index) => const Divider(),
+                    itemBuilder: (context, index) {
+                      return Row(
+                        children: <Widget>[
+                          // TODO get condition icon from assets and make it look nice here
+                          Column(
+                            children: [
+                              Text("${snapshot.data![index].date} "),
+                              Text("High: ${snapshot.data![index].highTemp}"),
+                              Text("Low: ${snapshot.data![index].lowTemp}"),
+                            ],
+                          ),
+                        ],
+                      );
+                    },
+                  ),
+                      ],
+                    );
+                } else if (snapshot.hasError) {
+                  return Text('${snapshot.error}');
+                }
 
-            // List of the weather report for the next week
-            Expanded(
-                child: ListView.separated(
-              padding: const EdgeInsets.all(8),
-              itemCount: 7,
-              separatorBuilder: (BuildContext context, int index) =>
-                  const Divider(),
-              itemBuilder: (BuildContext context, int index) {
-                return Container(
-                    height: 50,
-                    color: Colors.white12,
-                    child: const Row(
-                      children: <Widget>[Icon(Icons.sunny), Text('Day')],
-                    ));
+                // By default, show a loading spinner.
+                return const CircularProgressIndicator();
               },
-            ))
-          ],
+            )
         ),
       ),
     );
