@@ -19,7 +19,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
         useMaterial3: true,
       ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      home: const MyHomePage(title: 'Flutter Weather App Demo'),
     );
   }
 }
@@ -80,7 +80,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     itemBuilder: (context, index) {
                       return Row(
                         children: <Widget>[
-                          // TODO get condition icon from assets and make it look nice here
+                          Image.asset(snapshot.data![index].iconUri),
                           Column(
                             children: [
                               Text("${snapshot.data![index].date} "),
@@ -91,9 +91,8 @@ class _MyHomePageState extends State<MyHomePage> {
                         ],
                       );
                     },
-                  ),
-                      ],
-                    );
+                  ),],
+                  );
                 } else if (snapshot.hasError) {
                   return Text('${snapshot.error}');
                 }
