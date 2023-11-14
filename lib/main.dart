@@ -70,7 +70,10 @@ class _MyHomePageState extends State<MyHomePage> {
                     children: [
                     Column(
                       children: [
-                        Text(snapshot.data![0].city),
+                        Text(
+                          snapshot.data![0].city,
+                          style: const TextStyle(fontWeight: FontWeight.bold),
+                        ),
                         Text("Current Temperature: ${snapshot.data![0].currentTemp}"),
                       ],
                     ),
@@ -86,7 +89,7 @@ class _MyHomePageState extends State<MyHomePage> {
                           Image.asset(snapshot.data![index].iconUri),
                           Column(
                             children: [
-                              Text("${snapshot.data![index].date} "),
+                              Text(snapshot.data![index].date),
                               Text("High: ${snapshot.data![index].highTemp}"),
                               Text("Low: ${snapshot.data![index].lowTemp}"),
                             ],
