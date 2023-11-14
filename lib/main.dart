@@ -68,41 +68,59 @@ class _MyHomePageState extends State<MyHomePage> {
                 if (snapshot.hasData) {
                   return Column(
                     children: [
-                    Column(
-                      children: [
-                        Text(
-                          snapshot.data![0].city,
-                          style: const TextStyle(fontWeight: FontWeight.bold),
-                        ),
-                        Text("Current Temperature: ${snapshot.data![0].currentTemp}"),
-                      ],
-                    ),
-                    ListView.separated(
-                    itemCount: snapshot.data!.length,
-                    padding: const EdgeInsets.all(8),
-                    scrollDirection: Axis.vertical,
-                    shrinkWrap: true,
-                    separatorBuilder: (BuildContext context, int index) => const Divider(),
-                    itemBuilder: (context, index) {
-                      return Row(
-                        children: <Widget>[
-                          Image.asset(snapshot.data![index].iconUri),
-                          Column(
+                      Text(
+                        snapshot.data![0].city,
+                        style: const TextStyle(fontSize: 30,),
+                      ),
+                      const Divider(),
+                      Column(
+                        children: [
+                          Row(
                             children: [
-                              Text(snapshot.data![index].date),
-                              Text("High: ${snapshot.data![index].highTemp}"),
-                              Text("Low: ${snapshot.data![index].lowTemp}"),
+                              Image.asset(snapshot.data![0].iconUri),
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text("Currently: ${snapshot.data![0].currentTemp}"),
+                                  Text("High: ${snapshot.data![0].highTemp}"),
+                                  Text("Low: ${snapshot.data![0].lowTemp}"),
+                                ],
+                              ),
                             ],
                           ),
                         ],
-                      );
-                    },),],
+                      ),
+                      const Divider(),
+                      ListView.separated(
+                        itemCount: snapshot.data!.length-1,
+                        padding: const EdgeInsets.all(8),
+                        scrollDirection: Axis.vertical,
+                        shrinkWrap: true,
+                        separatorBuilder: (BuildContext context, int index) => const Divider(),
+                        itemBuilder: (context, index) {
+                          return Row(
+                            children: <Widget>[
+                              Image.asset(snapshot.data![index+1].iconUri),
+                              Column(
+                                children: [
+                                  Text(
+                                    snapshot.data![index+1].date,
+                                    style: const TextStyle(fontWeight: FontWeight.bold),
+                                  ),
+                                  Text("High: ${snapshot.data![index+1].highTemp}"),
+                                  Text("Low: ${snapshot.data![index+1].lowTemp}"),
+                                ],
+                              ),
+                            ],
+                          );
+                        },
+                      ),
+                      const Divider(),
+                    ],
                   );
                 } else if (snapshot.hasError) {
                   return Text('${snapshot.error}');
                 }
-
-                // By default, show a loading spinner.
                 return const CircularProgressIndicator();
               },
             )
