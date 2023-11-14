@@ -1,5 +1,5 @@
+import 'package:easy_search_bar/easy_search_bar.dart';
 import 'package:flutter/material.dart';
-import 'custom_search_delegate.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:group_project/weather.dart';
 
@@ -45,19 +45,17 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
+      appBar: EasySearchBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: Text(widget.title),
-        // Search button, opens search bar menu
-        actions: [
-          IconButton(
-            onPressed: () {
-              // TODO add search functionality, currently defaults to Pomona
-              showSearch(context: context, delegate: CustomSearchDelegate());
-            },
-            icon: const Icon(Icons.search),
-          )
-        ],
+        onSearch: (String searchInput) {
+          setState(() {
+            if (searchInput!="") {
+              futureWeather = Weather.fetchWeather(searchInput);
+            }
+          });
+          return searchInput;
+        },
       ),
 
       body: Center(
@@ -70,7 +68,12 @@ class _MyHomePageState extends State<MyHomePage> {
                 if (snapshot.hasData) {
                   return Column(
                     children: [
-                    Text(snapshot.data![0].city),
+                    Column(
+                      children: [
+                        Text(snapshot.data![0].city),
+                        Text("Current Temperature: ${snapshot.data![0].currentTemp}"),
+                      ],
+                    ),
                     ListView.separated(
                     itemCount: snapshot.data!.length,
                     padding: const EdgeInsets.all(8),
@@ -90,8 +93,7 @@ class _MyHomePageState extends State<MyHomePage> {
                           ),
                         ],
                       );
-                    },
-                  ),],
+                    },),],
                   );
                 } else if (snapshot.hasError) {
                   return Text('${snapshot.error}');
